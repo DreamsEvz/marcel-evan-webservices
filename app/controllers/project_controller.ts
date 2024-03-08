@@ -32,14 +32,15 @@ export default class ProjectController {
   }
 
   async create({ request, response }: HttpContext) {
-    const data = request.only(['name', 'description'])
+    const data = request.only(['title', 'description'])
     const project = await Project.create(data)
     return response.created(project)
   }
 
   async update({ params, request, response }: HttpContext) {
     const project: any = await Project.find(params.id)
-    const data = request.only(['name', 'description'])
+    if (!project) return response.notFound({ message: 'Project not found' })
+    const data = request.only(['title', 'description'])
     project.merge(data)
     await project.save()
     return response.ok(project)
@@ -47,14 +48,15 @@ export default class ProjectController {
 
   async delete({ params, response }: HttpContext) {
     const project: any = await Project.find(params.id)
+    if (!project) return response.notFound({ message: 'Project not found' })
     await project.delete()
-    return response.noContent()
+    return response.ok({ message: 'Project deleted' })
   }
 
   async assignDeveloper({ request, response }: HttpContext) {
     const { developerId, projectId } = request.only(['developerId', 'projectId'])
     const project: any = await Project.find(projectId)
     await project.related('developers').attach([developerId])
-    return response.ok(project)
+    return response.ok({ message: 'Developer assigned to project' })
   }
 }

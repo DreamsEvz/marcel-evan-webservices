@@ -9,6 +9,10 @@ export default class SkillController {
 
   async create({ request, response }: HttpContext) {
     const data = request.only(['name'])
+    data.name = data.name.toLowerCase()
+    if (await Skill.findBy('name', data.name)) {
+      return response.badRequest({ message: 'Skill already exists' })
+    }
     const skill = await Skill.create(data)
     return response.created(skill)
   }
@@ -20,6 +24,7 @@ export default class SkillController {
 
   async update({ params, request, response }: HttpContext) {
     const skill: any = await Skill.find(params.id)
+    if (!skill) return response.notFound({ message: 'Skill not found' })
     const data = request.only(['name'])
     skill.merge(data)
     await skill.save()
@@ -28,7 +33,8 @@ export default class SkillController {
 
   async delete({ params, response }: HttpContext) {
     const skill: any = await Skill.find(params.id)
+    if (!skill) return response.notFound({ message: 'Skill not found' })
     await skill.delete()
-    return response.noContent()
+    return response.ok({ message: 'Skill deleted' })
   }
 }

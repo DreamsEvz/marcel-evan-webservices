@@ -66,6 +66,6 @@ export default class DeveloperController {
     const { developerId, skillId } = request.only(['developerId', 'skillId'])
     const developer: any = await Developer.find(developerId)
     await developer.related('skills').attach([skillId])
-    return response.ok(developer)
+    return response.ok({ message: 'Skill assigned' })
   }
 }

@@ -22,41 +22,43 @@ router.get('/', async () => {
 router
   .group(() => {
     //Pojects routes
-    router.get('project', [ProjectController, 'index'])
-    router.get('projet/recent', [ProjectController, 'recent'])
-    router.get('project/:id', [ProjectController, 'show']).use(middleware.auth({ guards: ['api'] }))
+    router.get('projects', [ProjectController, 'index'])
+    router.get('projects/recent', [ProjectController, 'recent'])
     router
-      .post('project', [ProjectController, 'create'])
+      .get('projects/:id', [ProjectController, 'show'])
+      .use(middleware.auth({ guards: ['api'] }))
+    router
+      .post('projects', [ProjectController, 'create'])
       .use([middleware.auth({ guards: ['api'] }), middleware.isAdmin()])
     router
-      .put('project/:id', [ProjectController, 'update'])
+      .put('projects/:id', [ProjectController, 'update'])
       .use([middleware.auth({ guards: ['api'] }), middleware.isAdmin()])
     router
-      .delete('project/:id', [ProjectController, 'delete'])
+      .delete('projects/:id', [ProjectController, 'delete'])
       .use([middleware.auth({ guards: ['api'] }), middleware.isAdmin()])
-    router.post('project/assign-developer', [ProjectController, 'assignDeveloper'])
+    router.post('projects/assign-developer', [ProjectController, 'assignDeveloper'])
 
     //Skills routes
-    router.get('skill', [SkillController, 'index']).use(middleware.auth({ guards: ['api'] }))
-    router.get('skill/:id', [SkillController, 'show']).use(middleware.auth({ guards: ['api'] }))
+    router.get('skills', [SkillController, 'index']).use(middleware.auth({ guards: ['api'] }))
+    router.get('skills/:id', [SkillController, 'show']).use(middleware.auth({ guards: ['api'] }))
     router
-      .post('skill', [SkillController, 'create'])
+      .post('skills', [SkillController, 'create'])
       .use(middleware.auth({ guards: ['api'] }))
       .use([middleware.auth({ guards: ['api'] }), middleware.isAdmin()])
     router
-      .put('skill/:id', [SkillController, 'update'])
+      .put('skills/:id', [SkillController, 'update'])
       .use(middleware.auth({ guards: ['api'] }))
       .use([middleware.auth({ guards: ['api'] }), middleware.isAdmin()])
     router
-      .delete('skill/:id', [SkillController, 'delete'])
+      .delete('skills/:id', [SkillController, 'delete'])
       .use(middleware.auth({ guards: ['api'] }))
       .use([middleware.auth({ guards: ['api'] }), middleware.isAdmin()])
 
     //Developers routes
-    router.get('developer', [DeveloperController, 'index'])
-    router.post('developer/assign-skill', [DeveloperController, 'assignSkill'])
+    router.get('developers', [DeveloperController, 'index'])
+    router.post('developers/assign-skill', [DeveloperController, 'assignSkill'])
   })
   .prefix('api/v1/')
 
-router.post('developer/register', [DeveloperController, 'create'])
-router.post('developer/login', [DeveloperController, 'login'])
+router.post('developers/register', [DeveloperController, 'create'])
+router.post('developers/login', [DeveloperController, 'login'])

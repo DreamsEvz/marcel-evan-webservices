@@ -34,6 +34,9 @@ export default class DeveloperController {
 
   async update({ params, request, response }: HttpContext) {
     const developer: any = await Developer.find(params.id)
+    if (!developer) {
+      return response.notFound('Developer not found')
+    }
     const data = request.only(['name', 'email', 'password'])
     developer.merge(data)
     await developer.save()

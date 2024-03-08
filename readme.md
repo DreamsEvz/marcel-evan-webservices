@@ -8,4 +8,8 @@ normalement crud fonctionnel sur tout les models + login register
 
 normalement auth fonctionnel + restriction des routes si auth et si / ou est admin
 
+filtres fonctionnels
+
 je ne sais pas si la manière dont j'ai implémenté "projects/assign-developer" et "developers/assign-skill" est la plus optimal
+
+feedback gloal --> un petit temps de réadaptation pour repartir sur Adonis mais globalement faisaible

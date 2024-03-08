@@ -19,6 +19,7 @@ export default class SkillController {
 
   async show({ params, response }: HttpContext) {
     const skill = await Skill.find(params.id)
+    if (!skill) return response.notFound({ message: 'Skill not found' })
     return response.ok(skill)
   }
 

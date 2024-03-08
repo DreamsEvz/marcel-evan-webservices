@@ -26,6 +26,9 @@ export default class DeveloperController {
 
   async show({ params, response }: HttpContext) {
     const developer = await Developer.find(params.id)
+    if (!developer) {
+      return response.notFound('Developer not found')
+    }
     return response.ok(developer)
   }
 

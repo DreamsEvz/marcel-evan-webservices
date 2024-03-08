@@ -28,6 +28,7 @@ export default class ProjectController {
 
   async show({ params, response }: HttpContext) {
     const project = await Project.find(params.id)
+    if (!project) return response.notFound({ message: 'Project not found' })
     return response.ok(project)
   }
 

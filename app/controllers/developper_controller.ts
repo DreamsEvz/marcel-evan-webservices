@@ -3,13 +3,23 @@ import Developer from '#models/developper'
 import hash from '@adonisjs/core/services/hash'
 
 export default class DeveloperController {
-  async index({ response }: HttpContext) {
-    const developpers = await Developer.all()
+  async index({ request, response }: HttpContext) {
+    let query = Developer.query()
+
+    if (request.input('filter', 'skills')) {
+      query = Developer.query().preload('skills')
+    }
+
+    if (request.input('limit')) {
+      query = query.limit(request.input('limit'))
+    }
+
+    const developpers = await query.exec()
     return response.ok(developpers)
   }
 
   async create({ request, response }: HttpContext) {
-    const data = request.only(['firstName', 'lastName', 'email', 'password'])
+    const data = request.only(['firstName', 'lastName', 'email', 'password', 'isAdmin'])
     const developper = await Developer.create(data)
     return response.created(developper)
   }
@@ -50,5 +60,12 @@ export default class DeveloperController {
       token,
       200: 'OK',
     }
+  }
+
+  async assignSkill({ request, response }: HttpContext) {
+    const { developerId, skillId } = request.only(['developerId', 'skillId'])
+    const developer: any = await Developer.find(developerId)
+    await developer.related('skills').attach([skillId])
+    return response.ok(developer)
   }
 }
